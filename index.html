@@ -1,36 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyData Cloud - Personal Data Access</title>
+    <title>NightDrop - Secure File Upload</title>
     <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a25;
+            --accent-primary: #6366f1;
+            --accent-secondary: #8b5cf6;
+            --accent-glow: rgba(99, 102, 241, 0.3);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border-color: #27272a;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --secondary: #ec4899;
-            --bg-dark: #0f172a;
-            --bg-card: #1e293b;
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --border: #334155;
-        }
-
         body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background: var(--bg-dark);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg-primary);
             color: var(--text-primary);
             min-height: 100vh;
             overflow-x: hidden;
+            line-height: 1.6;
         }
 
-        /* Animated Background */
+        /* Animated background */
         .bg-animation {
             position: fixed;
             top: 0;
@@ -38,347 +44,398 @@
             width: 100%;
             height: 100%;
             z-index: -1;
-            background: 
-                radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 40% 20%, rgba(99, 102, 241, 0.1) 0%, transparent 50%);
-            animation: bgPulse 10s ease-in-out infinite;
+            overflow: hidden;
         }
 
-        @keyframes bgPulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 20% 80%, var(--accent-glow) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.2) 0%, transparent 50%);
+            animation: pulse 15s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
         }
 
         /* Header */
         header {
-            padding: 1.5rem 2rem;
-            background: rgba(15, 23, 42, 0.8);
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(18, 18, 26, 0.8);
             backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border);
             position: sticky;
             top: 0;
             z-index: 100;
         }
 
-        nav {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
         .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            background-clip: text;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
         }
 
-        .user-menu {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .status-indicator {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.875rem;
+        .tagline {
             color: var(--text-secondary);
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            background: #22c55e;
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+            font-size: 0.95rem;
         }
 
         /* Main Container */
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 2rem;
+            padding: 3rem 1.5rem;
         }
 
-        /* Hero Section */
-        .hero {
+        /* Upload Zone */
+        .upload-zone {
+            background: var(--bg-secondary);
+            border: 2px dashed var(--border-color);
+            border-radius: 24px;
+            padding: 4rem 2rem;
             text-align: center;
-            margin-bottom: 3rem;
-            padding: 2rem 0;
-        }
-
-        .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            background: linear-gradient(135deg, #fff 0%, var(--text-secondary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hero p {
-            color: var(--text-secondary);
-            font-size: 1.125rem;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        /* Search Bar */
-        .search-container {
-            max-width: 600px;
-            margin: 2rem auto;
-            position: relative;
-        }
-
-        .search-bar {
-            width: 100%;
-            padding: 1rem 1.5rem;
-            padding-left: 3rem;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 9999px;
-            color: var(--text-primary);
-            font-size: 1rem;
-            transition: all 0.3s;
-        }
-
-        .search-bar:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-secondary);
-        }
-
-        /* Data Categories Grid */
-        .categories-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 3rem;
-        }
-
-        .category-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 1rem;
-            padding: 1.5rem;
+            transition: all 0.3s ease;
             cursor: pointer;
-            transition: all 0.3s;
             position: relative;
             overflow: hidden;
+            margin-bottom: 2rem;
         }
 
-        .category-card::before {
+        .upload-zone::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            transform: scaleX(0);
-            transition: transform 0.3s;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent, rgba(99, 102, 241, 0.05), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
 
-        .category-card:hover {
-            transform: translateY(-4px);
-            border-color: var(--primary);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        .upload-zone:hover {
+            border-color: var(--accent-primary);
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
         }
 
-        .category-card:hover::before {
-            transform: scaleX(1);
+        .upload-zone:hover::before {
+            opacity: 1;
         }
 
-        .category-icon {
+        .upload-zone.drag-over {
+            border-color: var(--accent-secondary);
+            background: rgba(99, 102, 241, 0.1);
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            box-shadow: 0 10px 30px var(--accent-glow);
+            transition: transform 0.3s ease;
+        }
+
+        .upload-zone:hover .upload-icon {
+            transform: translateY(-5px) rotate(5deg);
+        }
+
+        .upload-text h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .upload-text p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            border: none;
+            padding: 0.875rem 2rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px var(--accent-glow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px var(--accent-glow);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        /* File List */
+        .file-list {
+            display: grid;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .file-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.3s ease;
+            animation: slideIn 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .file-item:hover {
+            border-color: var(--accent-primary);
+            transform: translateX(5px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .file-icon {
             width: 48px;
             height: 48px;
-            background: rgba(99, 102, 241, 0.1);
+            background: var(--bg-tertiary);
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.5rem;
-            margin-bottom: 1rem;
+            flex-shrink: 0;
         }
 
-        .category-card h3 {
-            font-size: 1.25rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .category-card p {
-            color: var(--text-secondary);
-            font-size: 0.875rem;
-            margin-bottom: 1rem;
-        }
-
-        .data-count {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.25rem 0.75rem;
-            background: rgba(99, 102, 241, 0.1);
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            color: var(--primary);
-            font-weight: 600;
-        }
-
-        /* Data View Section */
-        .data-view {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 1rem;
-            padding: 2rem;
-            display: none;
-            animation: fadeIn 0.5s;
-        }
-
-        .data-view.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .view-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .back-btn {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            background: transparent;
-            border: 1px solid var(--border);
-            border-radius: 0.5rem;
-            color: var(--text-primary);
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .back-btn:hover {
-            background: var(--primary);
-            border-color: var(--primary);
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .action-btn {
-            padding: 0.5rem 1rem;
-            background: var(--primary);
-            border: none;
-            border-radius: 0.5rem;
-            color: white;
-            cursor: pointer;
-            font-size: 0.875rem;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .action-btn:hover {
-            background: var(--primary-dark);
-            transform: translateY(-1px);
-        }
-
-        /* File Grid */
-        .file-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 1rem;
-        }
-
-        .file-item {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border);
-            border-radius: 0.75rem;
-            padding: 1rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: center;
-        }
-
-        .file-item:hover {
-            background: rgba(99, 102, 241, 0.1);
-            border-color: var(--primary);
-            transform: translateY(-2px);
-        }
-
-        .file-icon {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
+        .file-info {
+            flex: 1;
+            min-width: 0;
         }
 
         .file-name {
-            font-size: 0.875rem;
-            font-weight: 500;
-            margin-bottom: 0.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            margin-bottom: 0.25rem;
         }
 
         .file-meta {
-            font-size: 0.75rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            display: flex;
+            gap: 1rem;
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .btn-icon:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border-color: var(--accent-primary);
+        }
+
+        .btn-icon.delete:hover {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: var(--error);
+            color: var(--error);
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            transition: width 0.3s ease;
+            border-radius: 0 0 0 16px;
+        }
+
+        /* Stats Section */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-primary);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        .toast {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--accent-primary);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            animation: slideInRight 0.4s ease;
+            pointer-events: all;
+            min-width: 300px;
+        }
+
+        .toast.success { border-left-color: var(--success); }
+        .toast.error { border-left-color: var(--error); }
+        .toast.warning { border-left-color: var(--warning); }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
             color: var(--text-secondary);
         }
 
-        /* Upload Area */
-        .upload-area {
-            border: 2px dashed var(--border);
-            border-radius: 1rem;
-            padding: 3rem;
-            text-align: center;
-            margin-top: 2rem;
-            transition: all 0.3s;
-            cursor: pointer;
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
         }
 
-        .upload-area:hover {
-            border-color: var(--primary);
-            background: rgba(99, 102, 241, 0.05);
+        /* Responsive */
+        @media (max-width: 640px) {
+            .upload-zone {
+                padding: 2rem 1rem;
+            }
+            
+            .file-item {
+                flex-wrap: wrap;
+            }
+            
+            .file-actions {
+                width: 100%;
+                justify-content: flex-end;
+                margin-top: 0.5rem;
+            }
         }
 
-        .upload-area.dragover {
-            border-color: var(--secondary);
-            background: rgba(236, 72, 153, 0.05);
+        /* Loading Spinner */
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border-color);
+            border-top-color: var(--accent-primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
         }
 
-        /* Modal */
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Preview Modal */
         .modal {
             display: none;
             position: fixed;
@@ -387,10 +444,11 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
             z-index: 1000;
-            justify-content: center;
             align-items: center;
-            backdrop-filter: blur(5px);
+            justify-content: center;
+            padding: 2rem;
         }
 
         .modal.active {
@@ -398,94 +456,69 @@
         }
 
         .modal-content {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 1rem;
-            padding: 2rem;
-            max-width: 500px;
-            width: 90%;
-            animation: modalSlide 0.3s;
-        }
-
-        @keyframes modalSlide {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
+            background: var(--bg-secondary);
+            border-radius: 24px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid var(--border-color);
         }
 
         .modal-header {
-            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .modal-header h2 {
-            margin-bottom: 0.5rem;
+        .modal-body {
+            padding: 1.5rem;
+            overflow-y: auto;
+            max-height: 60vh;
         }
 
-        .form-group {
-            margin-bottom: 1rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-size: 0.875rem;
+        .close-btn {
+            background: none;
+            border: none;
             color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
         }
 
-        .form-group input {
-            width: 100%;
-            padding: 0.75rem;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border);
-            border-radius: 0.5rem;
+        .close-btn:hover {
+            background: var(--bg-tertiary);
             color: var(--text-primary);
         }
 
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--primary);
+        .preview-image {
+            max-width: 100%;
+            border-radius: 12px;
+            display: block;
+            margin: 0 auto;
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 2rem; }
-            .categories-grid { grid-template-columns: 1fr; }
-            .file-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-
-        /* Loading Animation */
-        .loader {
-            width: 48px;
-            height: 48px;
-            border: 3px solid var(--border);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 2rem auto;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Toast Notification */
-        .toast {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background: var(--bg-card);
-            border: 1px solid var(--primary);
-            padding: 1rem 1.5rem;
-            border-radius: 0.75rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            transform: translateX(400px);
-            transition: transform 0.3s;
-            z-index: 1001;
-        }
-
-        .toast.show {
-            transform: translateX(0);
+        .preview-text {
+            background: var(--bg-tertiary);
+            padding: 1.5rem;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 400px;
+            overflow-y: auto;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.6;
         }
     </style>
 </head>
@@ -493,332 +526,309 @@
     <div class="bg-animation"></div>
     
     <header>
-        <nav>
-            <div class="logo">
-                <span>◈</span>
-                <span>MyData Cloud</span>
-            </div>
-            <div class="user-menu">
-                <div class="status-indicator">
-                    <span class="status-dot"></span>
-                    <span>Secure Connection</span>
-                </div>
-                <button class="action-btn" onclick="showUploadModal()">
-                    <span>+</span>
-                    <span>Upload</span>
-                </button>
-            </div>
-        </nav>
+        <div class="logo">⚡ NightDrop</div>
+        <div class="tagline">Secure client-side file processing & sharing</div>
     </header>
 
     <div class="container">
-        <!-- Hero Section -->
-        <div class="hero" id="heroSection">
-            <h1>All Your Data, Everywhere</h1>
-            <p>Access, manage, and share your personal files securely from any device, anywhere in the world.</p>
-            
-            <div class="search-container">
-                <span class="search-icon">🔍</span>
-                <input type="text" class="search-bar" placeholder="Search across all your data..." id="searchInput">
+        <!-- Stats -->
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-value" id="totalFiles">0</div>
+                <div class="stat-label">Files Uploaded</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="totalSize">0 MB</div>
+                <div class="stat-label">Total Size</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="fileTypes">0</div>
+                <div class="stat-label">File Types</div>
             </div>
         </div>
 
-        <!-- Categories Grid -->
-        <div class="categories-grid" id="categoriesGrid">
-            <div class="category-card" onclick="openCategory('documents')">
-                <div class="category-icon">📄</div>
-                <h3>Documents</h3>
-                <p>PDFs, Word files, spreadsheets, and text documents</p>
-                <span class="data-count">128 files</span>
-            </div>
-
-            <div class="category-card" onclick="openCategory('photos')">
-                <div class="category-icon">📸</div>
-                <h3>Photos</h3>
-                <p>Personal photos, screenshots, and albums</p>
-                <span class="data-count">1,432 items</span>
-            </div>
-
-            <div class="category-card" onclick="openCategory('videos')">
-                <div class="category-icon">🎬</div>
-                <h3>Videos</h3>
-                <p>Movies, clips, and recorded content</p>
-                <span class="data-count">56 files</span>
-            </div>
-
-            <div class="category-card" onclick="openCategory('music')">
-                <div class="category-icon">🎵</div>
-                <h3>Music</h3>
-                <p>MP3s, playlists, and audio recordings</p>
-                <span class="data-count">892 tracks</span>
-            </div>
-
-            <div class="category-card" onclick="openCategory('code')">
-                <div class="category-icon">💻</div>
-                <h3>Code</h3>
-                <p>Projects, repositories, and scripts</p>
-                <span class="data-count">45 projects</span>
-            </div>
-
-            <div class="category-card" onclick="openCategory('archives')">
-                <div class="category-icon">📦</div>
-                <h3>Archives</h3>
-                <p>Zip files, backups, and compressed data</p>
-                <span class="data-count">23 archives</span>
-            </div>
-        </div>
-
-        <!-- Data View (Hidden by default) -->
-        <div class="data-view" id="dataView">
-            <div class="view-header">
-                <button class="back-btn" onclick="backToCategories()">
-                    <span>←</span>
-                    <span>Back</span>
+        <!-- Upload Zone -->
+        <div class="upload-zone" id="dropZone">
+            <input type="file" id="fileInput" class="file-input" multiple accept="*/*">
+            <div class="upload-icon">📁</div>
+            <div class="upload-text">
+                <h2>Drop files here</h2>
+                <p>or click to browse from your device</p>
+                <button class="btn-primary" onclick="document.getElementById('fileInput').click()">
+                    Select Files
                 </button>
-                <h2 id="viewTitle">Documents</h2>
-                <div class="action-buttons">
-                    <button class="action-btn" onclick="selectAll()">Select All</button>
-                    <button class="action-btn" onclick="downloadSelected()">Download</button>
-                </div>
             </div>
-            
-            <div class="file-grid" id="fileGrid">
-                <!-- Files will be populated here -->
-            </div>
+        </div>
 
-            <div class="upload-area" id="uploadArea" ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" onclick="document.getElementById('fileInput').click()">
-                <div style="font-size: 3rem; margin-bottom: 1rem;">📤</div>
-                <h3>Drop files here or click to upload</h3>
-                <p style="color: var(--text-secondary); margin-top: 0.5rem;">Support for all file types up to 2GB</p>
-                <input type="file" id="fileInput" multiple style="display: none;" onchange="handleFileSelect(event)">
+        <!-- File List -->
+        <div id="fileList" class="file-list">
+            <div class="empty-state">
+                <div class="empty-icon">📂</div>
+                <p>No files uploaded yet. Drop some files to get started!</p>
             </div>
         </div>
     </div>
 
-    <!-- Upload Modal -->
-    <div class="modal" id="uploadModal">
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Preview Modal -->
+    <div class="modal" id="previewModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Quick Upload</h2>
-                <p style="color: var(--text-secondary);">Upload files to your cloud storage</p>
+                <h3 id="modalTitle">File Preview</h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
             </div>
-            <div class="upload-area" style="margin: 0;" onclick="document.getElementById('modalFileInput').click()">
-                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📁</div>
-                <p>Click to browse or drag files here</p>
-                <input type="file" id="modalFileInput" multiple style="display: none;" onchange="handleModalUpload(event)">
+            <div class="modal-body" id="modalBody">
+                <!-- Content injected here -->
             </div>
-            <button style="width: 100%; margin-top: 1rem; padding: 0.75rem; background: var(--border); border: none; border-radius: 0.5rem; color: var(--text-primary); cursor: pointer;" onclick="closeUploadModal()">Cancel</button>
         </div>
-    </div>
-
-    <!-- Toast Notification -->
-    <div class="toast" id="toast">
-        <span>✓</span>
-        <span id="toastMessage">Operation successful</span>
     </div>
 
     <script>
-        // Sample data for each category
-        const categoryData = {
-            documents: [
-                { name: 'Resume_2026.pdf', size: '245 KB', date: '2 days ago', icon: '📄' },
-                { name: 'Project_Proposal.docx', size: '1.2 MB', date: '1 week ago', icon: '📝' },
-                { name: 'Budget_2026.xlsx', size: '456 KB', date: '3 days ago', icon: '📊' },
-                { name: 'Meeting_Notes.txt', size: '12 KB', date: 'Today', icon: '📃' },
-                { name: 'Contract_Final.pdf', size: '3.4 MB', date: '2 weeks ago', icon: '📄' },
-                { name: 'Presentation.pptx', size: '8.9 MB', date: '5 days ago', icon: '📽️' }
-            ],
-            photos: [
-                { name: 'Vacation_Beach.jpg', size: '4.2 MB', date: 'Yesterday', icon: '🏖️' },
-                { name: 'Family_Dinner.png', size: '2.1 MB', date: 'Last week', icon: '🍽️' },
-                { name: 'Screenshot_001.png', size: '890 KB', date: 'Today', icon: '🖼️' },
-                { name: 'Profile_Photo.jpg', size: '1.5 MB', date: '1 month ago', icon: '👤' },
-                { name: 'Concert_2025.jpg', size: '3.8 MB', date: '3 months ago', icon: '🎸' }
-            ],
-            videos: [
-                { name: 'Tutorial_React.mp4', size: '245 MB', date: '2 days ago', icon: '🎥' },
-                { name: 'Birthday_Party.mov', size: '1.2 GB', date: '1 month ago', icon: '🎂' },
-                { name: 'Screen_Recording.mp4', size: '45 MB', date: 'Yesterday', icon: '📹' }
-            ],
-            music: [
-                { name: 'Playlist_Summer.mp3', size: '45 MB', date: '2 weeks ago', icon: '🎵' },
-                { name: 'Podcast_Episode_12.mp3', size: '78 MB', date: '3 days ago', icon: '🎧' },
-                { name: 'Recording_Demo.wav', size: '234 MB', date: '1 week ago', icon: '🎤' }
-            ],
-            code: [
-                { name: 'MyApp_Source.zip', size: '12 MB', date: 'Yesterday', icon: '💾' },
-                { name: 'script_automation.py', size: '45 KB', date: 'Today', icon: '🐍' },
-                { name: 'website_backup.tar.gz', size: '156 MB', date: '1 week ago', icon: '🌐' }
-            ],
-            archives: [
-                { name: 'Old_Projects.zip', size: '1.4 GB', date: '6 months ago', icon: '📦' },
-                { name: 'Photos_Backup_2025.zip', size: '4.5 GB', date: '2 months ago', icon: '💿' }
-            ]
-        };
+        // State management
+        let files = JSON.parse(localStorage.getItem('nightdrop_files') || '[]');
+        
+        // DOM Elements
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const fileList = document.getElementById('fileList');
+        const toastContainer = document.getElementById('toastContainer');
 
-        let currentCategory = null;
+        // Initialize
+        updateStats();
+        renderFiles();
 
-        function openCategory(category) {
-            currentCategory = category;
-            const data = categoryData[category] || [];
-            const grid = document.getElementById('fileGrid');
-            const title = document.getElementById('viewTitle');
-            
-            // Capitalize first letter
-            title.textContent = category.charAt(0).toUpperCase() + category.slice(1);
-            
-            // Populate files
-            grid.innerHTML = data.map(file => `
-                <div class="file-item" onclick="selectFile(this)">
-                    <div class="file-icon">${file.icon}</div>
-                    <div class="file-name">${file.name}</div>
-                    <div class="file-meta">${file.size} • ${file.date}</div>
-                </div>
-            `).join('');
-            
-            // Show data view, hide categories
-            document.getElementById('categoriesGrid').style.display = 'none';
-            document.getElementById('heroSection').style.display = 'none';
-            document.getElementById('dataView').classList.add('active');
-            
-            window.scrollTo(0, 0);
-        }
+        // Event Listeners
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('drag-over');
+        });
 
-        function backToCategories() {
-            document.getElementById('categoriesGrid').style.display = 'grid';
-            document.getElementById('heroSection').style.display = 'block';
-            document.getElementById('dataView').classList.remove('active');
-            currentCategory = null;
-        }
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('drag-over');
+        });
 
-        function selectFile(element) {
-            element.style.background = element.style.background === 'rgba(99, 102, 241, 0.2)' ? '' : 'rgba(99, 102, 241, 0.2)';
-            element.style.borderColor = element.style.borderColor === 'var(--primary)' ? '' : 'var(--primary)';
-        }
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('drag-over');
+            handleFiles(e.dataTransfer.files);
+        });
 
-        function selectAll() {
-            const files = document.querySelectorAll('.file-item');
-            const allSelected = Array.from(files).every(f => f.style.background === 'rgba(99, 102, 241, 0.2)');
-            
-            files.forEach(file => {
-                if (allSelected) {
-                    file.style.background = '';
-                    file.style.borderColor = '';
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+
+        // File Handling
+        function handleFiles(fileList) {
+            Array.from(fileList).forEach(file => {
+                const fileData = {
+                    id: Date.now() + Math.random().toString(36).substr(2, 9),
+                    name: file.name,
+                    size: file.size,
+                    type: file.type,
+                    lastModified: file.lastModified,
+                    content: null
+                };
+
+                // Read file content for preview/storage
+                const reader = new FileReader();
+                
+                if (file.type.startsWith('image/')) {
+                    reader.onload = (e) => {
+                        fileData.content = e.target.result;
+                        addFile(fileData);
+                    };
+                    reader.readAsDataURL(file);
+                } else if (file.size < 1024 * 1024) { // Only store text files < 1MB
+                    reader.onload = (e) => {
+                        fileData.content = e.target.result;
+                        addFile(fileData);
+                    };
+                    reader.readAsText(file);
                 } else {
-                    file.style.background = 'rgba(99, 102, 241, 0.2)';
-                    file.style.borderColor = 'var(--primary)';
+                    addFile(fileData);
                 }
             });
         }
 
-        function downloadSelected() {
-            showToast('Preparing download...');
-            setTimeout(() => showToast('Download started!'), 1000);
+        function addFile(fileData) {
+            files.unshift(fileData);
+            saveFiles();
+            renderFiles();
+            updateStats();
+            showToast(`Uploaded ${fileData.name}`, 'success');
         }
 
-        // Drag and drop handlers
-        function handleDragOver(e) {
-            e.preventDefault();
-            e.currentTarget.classList.add('dragover');
+        function removeFile(id) {
+            files = files.filter(f => f.id !== id);
+            saveFiles();
+            renderFiles();
+            updateStats();
+            showToast('File removed', 'warning');
         }
 
-        function handleDragLeave(e) {
-            e.currentTarget.classList.remove('dragover');
+        function saveFiles() {
+            // Store only metadata, not content for large files
+            const storageData = files.map(f => ({
+                ...f,
+                content: f.content && f.content.length > 50000 ? null : f.content
+            }));
+            localStorage.setItem('nightdrop_files', JSON.stringify(storageData));
         }
 
-        function handleDrop(e) {
-            e.preventDefault();
-            e.currentTarget.classList.remove('dragover');
-            const files = e.dataTransfer.files;
-            handleFiles(files);
-        }
-
-        function handleFileSelect(e) {
-            const files = e.target.files;
-            handleFiles(files);
-        }
-
-        function handleFiles(files) {
-            if (files.length > 0) {
-                showToast(`Uploading ${files.length} file(s)...`);
-                setTimeout(() => {
-                    showToast('Upload complete!');
-                    // Add to current view if in category
-                    if (currentCategory) {
-                        const grid = document.getElementById('fileGrid');
-                        Array.from(files).forEach(file => {
-                            const div = document.createElement('div');
-                            div.className = 'file-item';
-                            div.innerHTML = `
-                                <div class="file-icon">📄</div>
-                                <div class="file-name">${file.name}</div>
-                                <div class="file-meta">${(file.size / 1024).toFixed(1)} KB • Just now</div>
-                            `;
-                            div.onclick = function() { selectFile(this); };
-                            grid.insertBefore(div, grid.firstChild);
-                        });
-                    }
-                }, 1500);
+        function renderFiles() {
+            if (files.length === 0) {
+                fileList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">📂</div>
+                        <p>No files uploaded yet. Drop some files to get started!</p>
+                    </div>
+                `;
+                return;
             }
+
+            fileList.innerHTML = files.map(file => `
+                <div class="file-item" data-id="${file.id}">
+                    <div class="file-icon">${getFileIcon(file.type)}</div>
+                    <div class="file-info">
+                        <div class="file-name">${escapeHtml(file.name)}</div>
+                        <div class="file-meta">
+                            <span>${formatSize(file.size)}</span>
+                            <span>•</span>
+                            <span>${new Date(file.lastModified).toLocaleDateString()}</span>
+                            <span>•</span>
+                            <span>${file.type || 'Unknown'}</span>
+                        </div>
+                    </div>
+                    <div class="file-actions">
+                        ${file.content ? `
+                            <button class="btn-icon" onclick="previewFile('${file.id}')" title="Preview">
+                                👁️
+                            </button>
+                        ` : ''}
+                        <button class="btn-icon" onclick="downloadFile('${file.id}')" title="Download">
+                            ⬇️
+                        </button>
+                        <button class="btn-icon delete" onclick="removeFile('${file.id}')" title="Delete">
+                            🗑️
+                        </button>
+                    </div>
+                    <div class="progress-bar" style="width: 100%"></div>
+                </div>
+            `).join('');
         }
 
-        function showUploadModal() {
-            document.getElementById('uploadModal').classList.add('active');
+        function getFileIcon(type) {
+            if (type.startsWith('image/')) return '🖼️';
+            if (type.startsWith('video/')) return '🎬';
+            if (type.startsWith('audio/')) return '🎵';
+            if (type.includes('pdf')) return '📄';
+            if (type.includes('zip') || type.includes('rar')) return '📦';
+            if (type.includes('code') || type.includes('javascript') || type.includes('html')) return '💻';
+            return '📄';
         }
 
-        function closeUploadModal() {
-            document.getElementById('uploadModal').classList.remove('active');
+        function formatSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         }
 
-        function handleModalUpload(e) {
-            handleFiles(e.target.files);
-            closeUploadModal();
-        }
-
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            document.getElementById('toastMessage').textContent = message;
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 3000);
-        }
-
-        // Search functionality
-        document.getElementById('searchInput').addEventListener('input', function(e) {
-            const term = e.target.value.toLowerCase();
-            if (term === '') return;
+        function updateStats() {
+            document.getElementById('totalFiles').textContent = files.length;
             
-            // Simple search across all categories
-            const results = [];
-            Object.keys(categoryData).forEach(cat => {
-                categoryData[cat].forEach(file => {
-                    if (file.name.toLowerCase().includes(term)) {
-                        results.push({...file, category: cat});
-                    }
-                });
-            });
+            const totalBytes = files.reduce((acc, file) => acc + file.size, 0);
+            document.getElementById('totalSize').textContent = formatSize(totalBytes);
             
-            if (results.length > 0 && e.target.value.length > 2) {
-                showToast(`Found ${results.length} result(s)`);
+            const types = new Set(files.map(f => f.type.split('/')[0]).filter(Boolean));
+            document.getElementById('fileTypes').textContent = types.size;
+        }
+
+        function previewFile(id) {
+            const file = files.find(f => f.id === id);
+            if (!file || !file.content) return;
+
+            document.getElementById('modalTitle').textContent = file.name;
+            const modalBody = document.getElementById('modalBody');
+            
+            if (file.type.startsWith('image/')) {
+                modalBody.innerHTML = `<img src="${file.content}" class="preview-image" alt="${file.name}">`;
+            } else {
+                modalBody.innerHTML = `<pre class="preview-text">${escapeHtml(file.content)}</pre>`;
             }
-        });
+            
+            document.getElementById('previewModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('previewModal').classList.remove('active');
+        }
+
+        function downloadFile(id) {
+            const file = files.find(f => f.id === id);
+            if (!file) return;
+
+            // Create download link
+            const link = document.createElement('a');
+            link.download = file.name;
+            
+            if (file.content) {
+                link.href = file.content;
+            } else {
+                // Create dummy content for demo
+                const blob = new Blob(['This is a demo file. In a real implementation, this would download the actual file content.'], { type: 'text/plain' });
+                link.href = URL.createObjectURL(blob);
+            }
+            
+            link.click();
+            showToast(`Downloading ${file.name}`, 'success');
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icons = {
+                success: '✅',
+                error: '❌',
+                warning: '⚠️',
+                info: 'ℹ️'
+            };
+            
+            toast.innerHTML = `
+                <span>${icons[type] || 'ℹ️'}</span>
+                <span>${message}</span>
+            `;
+            
+            toastContainer.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(100%)';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
 
         // Close modal on outside click
-        document.getElementById('uploadModal').addEventListener('click', function(e) {
-            if (e.target === this) closeUploadModal();
+        document.getElementById('previewModal').addEventListener('click', (e) => {
+            if (e.target.id === 'previewModal') closeModal();
         });
 
         // Keyboard shortcuts
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                if (document.getElementById('uploadModal').classList.contains('active')) {
-                    closeUploadModal();
-                } else if (currentCategory) {
-                    backToCategories();
-                }
-            }
-            if (e.ctrlKey && e.key === 'u') {
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+            if (e.ctrlKey && e.key === 'o') {
                 e.preventDefault();
-                showUploadModal();
+                fileInput.click();
             }
         });
     </script>
