@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyData Cloud - Personal Data Access</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #ec4899;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border: #334155;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(99, 102, 241, 0.1) 0%, transparent 50%);
+            animation: bgPulse 10s ease-in-out infinite;
+        }
+
+        @keyframes bgPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Header */
+        header {
+            padding: 1.5rem 2rem;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff 0%, var(--text-secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            color: var(--text-secondary);
+            font-size: 1.125rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Search Bar */
+        .search-container {
+            max-width: 600px;
+            margin: 2rem auto;
+            position: relative;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            padding-left: 3rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 9999px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .search-bar:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+
+        /* Data Categories Grid */
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .category-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+
+        .category-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .category-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .category-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .category-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .category-card p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+
+        .data-count {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.25rem 0.75rem;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* Data View Section */
+        .data-view {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 2rem;
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .data-view.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .view-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            padding: 0.5rem 1rem;
+            background: var(--primary);
+            border: none;
+            border-radius: 0.5rem;
+            color: white;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .action-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        /* File Grid */
+        .file-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .file-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .file-item:hover {
+            background: rgba(99, 102, 241, 0.1);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .file-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .file-name {
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .file-meta {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* Upload Area */
+        .upload-area {
+            border: 2px dashed var(--border);
+            border-radius: 1rem;
+            padding: 3rem;
+            text-align: center;
+            margin-top: 2rem;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .upload-area.dragover {
+            border-color: var(--secondary);
+            background: rgba(236, 72, 153, 0.05);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            animation: modalSlide 0.3s;
+        }
+
+        @keyframes modalSlide {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-header h2 {
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            .categories-grid { grid-template-columns: 1fr; }
+            .file-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        /* Loading Animation */
+        .loader {
+            width: 48px;
+            height: 48px;
+            border: 3px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--bg-card);
+            border: 1px solid var(--primary);
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transform: translateX(400px);
+            transition: transform 0.3s;
+            z-index: 1001;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+    
+    <header>
+        <nav>
+            <div class="logo">
+                <span>◈</span>
+                <span>MyData Cloud</span>
+            </div>
+            <div class="user-menu">
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span>Secure Connection</span>
+                </div>
+                <button class="action-btn" onclick="showUploadModal()">
+                    <span>+</span>
+                    <span>Upload</span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero" id="heroSection">
+            <h1>All Your Data, Everywhere</h1>
+            <p>Access, manage, and share your personal files securely from any device, anywhere in the world.</p>
+            
+            <div class="search-container">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="search-bar" placeholder="Search across all your data..." id="searchInput">
+            </div>
+        </div>
+
+        <!-- Categories Grid -->
+        <div class="categories-grid" id="categoriesGrid">
+            <div class="category-card" onclick="openCategory('documents')">
+                <div class="category-icon">📄</div>
+                <h3>Documents</h3>
+                <p>PDFs, Word files, spreadsheets, and text documents</p>
+                <span class="data-count">128 files</span>
+            </div>
+
+            <div class="category-card" onclick="openCategory('photos')">
+                <div class="category-icon">📸</div>
+                <h3>Photos</h3>
+                <p>Personal photos, screenshots, and albums</p>
+                <span class="data-count">1,432 items</span>
+            </div>
+
+            <div class="category-card" onclick="openCategory('videos')">
+                <div class="category-icon">🎬</div>
+                <h3>Videos</h3>
+                <p>Movies, clips, and recorded content</p>
+                <span class="data-count">56 files</span>
+            </div>
+
+            <div class="category-card" onclick="openCategory('music')">
+                <div class="category-icon">🎵</div>
+                <h3>Music</h3>
+                <p>MP3s, playlists, and audio recordings</p>
+                <span class="data-count">892 tracks</span>
+            </div>
+
+            <div class="category-card" onclick="openCategory('code')">
+                <div class="category-icon">💻</div>
+                <h3>Code</h3>
+                <p>Projects, repositories, and scripts</p>
+                <span class="data-count">45 projects</span>
+            </div>
+
+            <div class="category-card" onclick="openCategory('archives')">
+                <div class="category-icon">📦</div>
+                <h3>Archives</h3>
+                <p>Zip files, backups, and compressed data</p>
+                <span class="data-count">23 archives</span>
+            </div>
+        </div>
+
+        <!-- Data View (Hidden by default) -->
+        <div class="data-view" id="dataView">
+            <div class="view-header">
+                <button class="back-btn" onclick="backToCategories()">
+                    <span>←</span>
+                    <span>Back</span>
+                </button>
+                <h2 id="viewTitle">Documents</h2>
+                <div class="action-buttons">
+                    <button class="action-btn" onclick="selectAll()">Select All</button>
+                    <button class="action-btn" onclick="downloadSelected()">Download</button>
+                </div>
+            </div>
+            
+            <div class="file-grid" id="fileGrid">
+                <!-- Files will be populated here -->
+            </div>
+
+            <div class="upload-area" id="uploadArea" ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" onclick="document.getElementById('fileInput').click()">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">📤</div>
+                <h3>Drop files here or click to upload</h3>
+                <p style="color: var(--text-secondary); margin-top: 0.5rem;">Support for all file types up to 2GB</p>
+                <input type="file" id="fileInput" multiple style="display: none;" onchange="handleFileSelect(event)">
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Modal -->
+    <div class="modal" id="uploadModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Quick Upload</h2>
+                <p style="color: var(--text-secondary);">Upload files to your cloud storage</p>
+            </div>
+            <div class="upload-area" style="margin: 0;" onclick="document.getElementById('modalFileInput').click()">
+                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📁</div>
+                <p>Click to browse or drag files here</p>
+                <input type="file" id="modalFileInput" multiple style="display: none;" onchange="handleModalUpload(event)">
+            </div>
+            <button style="width: 100%; margin-top: 1rem; padding: 0.75rem; background: var(--border); border: none; border-radius: 0.5rem; color: var(--text-primary); cursor: pointer;" onclick="closeUploadModal()">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <span>✓</span>
+        <span id="toastMessage">Operation successful</span>
+    </div>
+
+    <script>
+        // Sample data for each category
+        const categoryData = {
+            documents: [
+                { name: 'Resume_2026.pdf', size: '245 KB', date: '2 days ago', icon: '📄' },
+                { name: 'Project_Proposal.docx', size: '1.2 MB', date: '1 week ago', icon: '📝' },
+                { name: 'Budget_2026.xlsx', size: '456 KB', date: '3 days ago', icon: '📊' },
+                { name: 'Meeting_Notes.txt', size: '12 KB', date: 'Today', icon: '📃' },
+                { name: 'Contract_Final.pdf', size: '3.4 MB', date: '2 weeks ago', icon: '📄' },
+                { name: 'Presentation.pptx', size: '8.9 MB', date: '5 days ago', icon: '📽️' }
+            ],
+            photos: [
+                { name: 'Vacation_Beach.jpg', size: '4.2 MB', date: 'Yesterday', icon: '🏖️' },
+                { name: 'Family_Dinner.png', size: '2.1 MB', date: 'Last week', icon: '🍽️' },
+                { name: 'Screenshot_001.png', size: '890 KB', date: 'Today', icon: '🖼️' },
+                { name: 'Profile_Photo.jpg', size: '1.5 MB', date: '1 month ago', icon: '👤' },
+                { name: 'Concert_2025.jpg', size: '3.8 MB', date: '3 months ago', icon: '🎸' }
+            ],
+            videos: [
+                { name: 'Tutorial_React.mp4', size: '245 MB', date: '2 days ago', icon: '🎥' },
+                { name: 'Birthday_Party.mov', size: '1.2 GB', date: '1 month ago', icon: '🎂' },
+                { name: 'Screen_Recording.mp4', size: '45 MB', date: 'Yesterday', icon: '📹' }
+            ],
+            music: [
+                { name: 'Playlist_Summer.mp3', size: '45 MB', date: '2 weeks ago', icon: '🎵' },
+                { name: 'Podcast_Episode_12.mp3', size: '78 MB', date: '3 days ago', icon: '🎧' },
+                { name: 'Recording_Demo.wav', size: '234 MB', date: '1 week ago', icon: '🎤' }
+            ],
+            code: [
+                { name: 'MyApp_Source.zip', size: '12 MB', date: 'Yesterday', icon: '💾' },
+                { name: 'script_automation.py', size: '45 KB', date: 'Today', icon: '🐍' },
+                { name: 'website_backup.tar.gz', size: '156 MB', date: '1 week ago', icon: '🌐' }
+            ],
+            archives: [
+                { name: 'Old_Projects.zip', size: '1.4 GB', date: '6 months ago', icon: '📦' },
+                { name: 'Photos_Backup_2025.zip', size: '4.5 GB', date: '2 months ago', icon: '💿' }
+            ]
+        };
+
+        let currentCategory = null;
+
+        function openCategory(category) {
+            currentCategory = category;
+            const data = categoryData[category] || [];
+            const grid = document.getElementById('fileGrid');
+            const title = document.getElementById('viewTitle');
+            
+            // Capitalize first letter
+            title.textContent = category.charAt(0).toUpperCase() + category.slice(1);
+            
+            // Populate files
+            grid.innerHTML = data.map(file => `
+                <div class="file-item" onclick="selectFile(this)">
+                    <div class="file-icon">${file.icon}</div>
+                    <div class="file-name">${file.name}</div>
+                    <div class="file-meta">${file.size} • ${file.date}</div>
+                </div>
+            `).join('');
+            
+            // Show data view, hide categories
+            document.getElementById('categoriesGrid').style.display = 'none';
+            document.getElementById('heroSection').style.display = 'none';
+            document.getElementById('dataView').classList.add('active');
+            
+            window.scrollTo(0, 0);
+        }
+
+        function backToCategories() {
+            document.getElementById('categoriesGrid').style.display = 'grid';
+            document.getElementById('heroSection').style.display = 'block';
+            document.getElementById('dataView').classList.remove('active');
+            currentCategory = null;
+        }
+
+        function selectFile(element) {
+            element.style.background = element.style.background === 'rgba(99, 102, 241, 0.2)' ? '' : 'rgba(99, 102, 241, 0.2)';
+            element.style.borderColor = element.style.borderColor === 'var(--primary)' ? '' : 'var(--primary)';
+        }
+
+        function selectAll() {
+            const files = document.querySelectorAll('.file-item');
+            const allSelected = Array.from(files).every(f => f.style.background === 'rgba(99, 102, 241, 0.2)');
+            
+            files.forEach(file => {
+                if (allSelected) {
+                    file.style.background = '';
+                    file.style.borderColor = '';
+                } else {
+                    file.style.background = 'rgba(99, 102, 241, 0.2)';
+                    file.style.borderColor = 'var(--primary)';
+                }
+            });
+        }
+
+        function downloadSelected() {
+            showToast('Preparing download...');
+            setTimeout(() => showToast('Download started!'), 1000);
+        }
+
+        // Drag and drop handlers
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('dragover');
+        }
+
+        function handleDragLeave(e) {
+            e.currentTarget.classList.remove('dragover');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            handleFiles(files);
+        }
+
+        function handleFileSelect(e) {
+            const files = e.target.files;
+            handleFiles(files);
+        }
+
+        function handleFiles(files) {
+            if (files.length > 0) {
+                showToast(`Uploading ${files.length} file(s)...`);
+                setTimeout(() => {
+                    showToast('Upload complete!');
+                    // Add to current view if in category
+                    if (currentCategory) {
+                        const grid = document.getElementById('fileGrid');
+                        Array.from(files).forEach(file => {
+                            const div = document.createElement('div');
+                            div.className = 'file-item';
+                            div.innerHTML = `
+                                <div class="file-icon">📄</div>
+                                <div class="file-name">${file.name}</div>
+                                <div class="file-meta">${(file.size / 1024).toFixed(1)} KB • Just now</div>
+                            `;
+                            div.onclick = function() { selectFile(this); };
+                            grid.insertBefore(div, grid.firstChild);
+                        });
+                    }
+                }, 1500);
+            }
+        }
+
+        function showUploadModal() {
+            document.getElementById('uploadModal').classList.add('active');
+        }
+
+        function closeUploadModal() {
+            document.getElementById('uploadModal').classList.remove('active');
+        }
+
+        function handleModalUpload(e) {
+            handleFiles(e.target.files);
+            closeUploadModal();
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMessage').textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const term = e.target.value.toLowerCase();
+            if (term === '') return;
+            
+            // Simple search across all categories
+            const results = [];
+            Object.keys(categoryData).forEach(cat => {
+                categoryData[cat].forEach(file => {
+                    if (file.name.toLowerCase().includes(term)) {
+                        results.push({...file, category: cat});
+                    }
+                });
+            });
+            
+            if (results.length > 0 && e.target.value.length > 2) {
+                showToast(`Found ${results.length} result(s)`);
+            }
+        });
+
+        // Close modal on outside click
+        document.getElementById('uploadModal').addEventListener('click', function(e) {
+            if (e.target === this) closeUploadModal();
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                if (document.getElementById('uploadModal').classList.contains('active')) {
+                    closeUploadModal();
+                } else if (currentCategory) {
+                    backToCategories();
+                }
+            }
+            if (e.ctrlKey && e.key === 'u') {
+                e.preventDefault();
+                showUploadModal();
+            }
+        });
+    </script>
+</body>
+</html>
