@@ -65,39 +65,245 @@
             66% { transform: translate(-20px, 20px) scale(0.9); }
         }
 
+        /* Auth Container */
+        .auth-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .auth-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .auth-logo {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .auth-subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 0.875rem 1rem;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        .form-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .btn-primary {
+            width: 100%;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px var(--accent-glow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px var(--accent-glow);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            width: 100%;
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            padding: 1rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 0.75rem;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent-primary);
+            color: var(--text-primary);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        .auth-footer a {
+            color: var(--accent-primary);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: var(--error);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        /* Main App (hidden by default) */
+        #mainApp {
+            display: none;
+        }
+
         /* Header */
         header {
-            padding: 2rem;
-            text-align: center;
+            padding: 1.5rem 2rem;
             border-bottom: 1px solid var(--border-color);
             background: rgba(18, 18, 26, 0.8);
             backdrop-filter: blur(10px);
             position: sticky;
             top: 0;
             z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
 
         .logo {
-            font-size: 2rem;
+            font-size: 1.75rem;
             font-weight: 800;
             background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             letter-spacing: -0.02em;
-            margin-bottom: 0.5rem;
         }
 
-        .tagline {
+        .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--bg-tertiary);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            font-size: 0.875rem;
             color: var(--text-secondary);
-            font-size: 0.95rem;
+        }
+
+        .user-badge::before {
+            content: '👤';
+        }
+
+        .logout-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+        }
+
+        .logout-btn:hover {
+            border-color: var(--error);
+            color: var(--error);
+            background: rgba(239, 68, 68, 0.1);
         }
 
         /* Main Container */
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 3rem 1.5rem;
+            padding: 2rem 1.5rem;
         }
 
         /* Upload Zone */
@@ -105,7 +311,7 @@
             background: var(--bg-secondary);
             border: 2px dashed var(--border-color);
             border-radius: 24px;
-            padding: 4rem 2rem;
+            padding: 3rem 2rem;
             text-align: center;
             transition: all 0.3s ease;
             cursor: pointer;
@@ -143,15 +349,15 @@
         }
 
         .upload-icon {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 1.5rem;
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 1rem;
             background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            border-radius: 24px;
+            border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.5rem;
+            font-size: 2rem;
             box-shadow: 0 10px 30px var(--accent-glow);
             transition: transform 0.3s ease;
         }
@@ -161,49 +367,25 @@
         }
 
         .upload-text h2 {
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             margin-bottom: 0.5rem;
             color: var(--text-primary);
         }
 
         .upload-text p {
             color: var(--text-secondary);
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.25rem;
+            font-size: 0.9rem;
         }
 
         .file-input {
             display: none;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            color: white;
-            border: none;
-            padding: 0.875rem 2rem;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px var(--accent-glow);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px var(--accent-glow);
-        }
-
-        .btn-primary:active {
-            transform: translateY(0);
-        }
-
         /* File List */
         .file-list {
             display: grid;
             gap: 1rem;
-            margin-top: 2rem;
         }
 
         .file-item {
@@ -404,37 +586,6 @@
             opacity: 0.5;
         }
 
-        /* Responsive */
-        @media (max-width: 640px) {
-            .upload-zone {
-                padding: 2rem 1rem;
-            }
-            
-            .file-item {
-                flex-wrap: wrap;
-            }
-            
-            .file-actions {
-                width: 100%;
-                justify-content: flex-end;
-                margin-top: 0.5rem;
-            }
-        }
-
-        /* Loading Spinner */
-        .spinner {
-            width: 20px;
-            height: 20px;
-            border: 2px solid var(--border-color);
-            border-top-color: var(--accent-primary);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
         /* Preview Modal */
         .modal {
             display: none;
@@ -520,51 +671,120 @@
             font-size: 0.875rem;
             line-height: 1.6;
         }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .auth-card {
+                padding: 2rem 1.5rem;
+            }
+
+            header {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .upload-zone {
+                padding: 2rem 1rem;
+            }
+
+            .file-item {
+                flex-wrap: wrap;
+            }
+
+            .file-actions {
+                width: 100%;
+                justify-content: flex-end;
+                margin-top: 0.5rem;
+            }
+        }
     </style>
+<base target="_blank">
 </head>
 <body>
     <div class="bg-animation"></div>
-    
-    <header>
-        <div class="logo">⚡ NightDrop</div>
-        <div class="tagline">Secure client-side file processing & sharing</div>
-    </header>
 
-    <div class="container">
-        <!-- Stats -->
-        <div class="stats">
-            <div class="stat-card">
-                <div class="stat-value" id="totalFiles">0</div>
-                <div class="stat-label">Files Uploaded</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="totalSize">0 MB</div>
-                <div class="stat-label">Total Size</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="fileTypes">0</div>
-                <div class="stat-label">File Types</div>
-            </div>
-        </div>
+    <!-- Authentication Screen -->
+    <div id="authScreen" class="auth-container">
+        <div class="auth-card">
+            <div class="auth-logo">⚡ NightDrop</div>
+            <div class="auth-subtitle">Secure client-side file processing</div>
 
-        <!-- Upload Zone -->
-        <div class="upload-zone" id="dropZone">
-            <input type="file" id="fileInput" class="file-input" multiple accept="*/*">
-            <div class="upload-icon">📁</div>
-            <div class="upload-text">
-                <h2>Drop files here</h2>
-                <p>or click to browse from your device</p>
-                <button class="btn-primary" onclick="document.getElementById('fileInput').click()">
-                    Select Files
+            <div id="errorMsg" class="error-message"></div>
+
+            <form id="authForm" onsubmit="return false;">
+                <div class="form-group">
+                    <label class="form-label">Username</label>
+                    <input type="text" id="username" class="form-input" placeholder="Enter your username" required autocomplete="username">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" id="password" class="form-input" placeholder="Enter your password" required autocomplete="current-password">
+                </div>
+
+                <button type="submit" class="btn-primary" onclick="handleAuth()">
+                    <span id="authBtnText">Sign In</span>
                 </button>
+
+                <button type="button" class="btn-secondary" onclick="toggleAuthMode()">
+                    <span id="toggleBtnText">Create Account</span>
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                <span id="authFooterText">Don't have an account?</span>
+                <a onclick="toggleAuthMode()" id="authFooterLink">Sign up</a>
             </div>
         </div>
+    </div>
 
-        <!-- File List -->
-        <div id="fileList" class="file-list">
-            <div class="empty-state">
-                <div class="empty-icon">📂</div>
-                <p>No files uploaded yet. Drop some files to get started!</p>
+    <!-- Main Application (Hidden until authenticated) -->
+    <div id="mainApp">
+        <header>
+            <div class="header-left">
+                <div class="logo">⚡ NightDrop</div>
+                <div class="user-badge" id="currentUser">User</div>
+            </div>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </header>
+
+        <div class="container">
+            <!-- Stats -->
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalFiles">0</div>
+                    <div class="stat-label">Files Uploaded</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalSize">0 MB</div>
+                    <div class="stat-label">Total Size</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="fileTypes">0</div>
+                    <div class="stat-label">File Types</div>
+                </div>
+            </div>
+
+            <!-- Upload Zone -->
+            <div class="upload-zone" id="dropZone">
+                <input type="file" id="fileInput" class="file-input" multiple accept="*/*">
+                <div class="upload-icon">📁</div>
+                <div class="upload-text">
+                    <h2>Drop files here</h2>
+                    <p>or click to browse from your device</p>
+                    <button class="btn-primary" style="width: auto; padding: 0.75rem 1.5rem;" onclick="document.getElementById('fileInput').click()">
+                        Select Files
+                    </button>
+                </div>
+            </div>
+
+            <!-- File List -->
+            <div id="fileList" class="file-list">
+                <div class="empty-state">
+                    <div class="empty-icon">📂</div>
+                    <p>No files uploaded yet. Drop some files to get started!</p>
+                </div>
             </div>
         </div>
     </div>
@@ -579,47 +799,196 @@
                 <h3 id="modalTitle">File Preview</h3>
                 <button class="close-btn" onclick="closeModal()">&times;</button>
             </div>
-            <div class="modal-body" id="modalBody">
-                <!-- Content injected here -->
-            </div>
+            <div class="modal-body" id="modalBody"></div>
         </div>
     </div>
 
     <script>
-        // State management
-        let files = JSON.parse(localStorage.getItem('nightdrop_files') || '[]');
-        
+        // Authentication State
+        let isLoginMode = true;
+        let currentUser = null;
+        let files = [];
+
         // DOM Elements
-        const dropZone = document.getElementById('dropZone');
-        const fileInput = document.getElementById('fileInput');
-        const fileList = document.getElementById('fileList');
-        const toastContainer = document.getElementById('toastContainer');
+        const authScreen = document.getElementById('authScreen');
+        const mainApp = document.getElementById('mainApp');
+        const authBtnText = document.getElementById('authBtnText');
+        const toggleBtnText = document.getElementById('toggleBtnText');
+        const authFooterText = document.getElementById('authFooterText');
+        const authFooterLink = document.getElementById('authFooterLink');
+        const errorMsg = document.getElementById('errorMsg');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
 
         // Initialize
-        updateStats();
-        renderFiles();
+        checkExistingSession();
 
-        // Event Listeners
-        dropZone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            dropZone.classList.add('drag-over');
-        });
+        function toggleAuthMode() {
+            isLoginMode = !isLoginMode;
+            if (isLoginMode) {
+                authBtnText.textContent = 'Sign In';
+                toggleBtnText.textContent = 'Create Account';
+                authFooterText.textContent = "Don't have an account?";
+                authFooterLink.textContent = 'Sign up';
+            } else {
+                authBtnText.textContent = 'Create Account';
+                toggleBtnText.textContent = 'Sign In Instead';
+                authFooterText.textContent = "Already have an account?";
+                authFooterLink.textContent = 'Sign in';
+            }
+            errorMsg.classList.remove('show');
+        }
 
-        dropZone.addEventListener('dragleave', () => {
-            dropZone.classList.remove('drag-over');
-        });
+        function showError(message) {
+            errorMsg.textContent = message;
+            errorMsg.classList.add('show');
+            setTimeout(() => errorMsg.classList.remove('show'), 3000);
+        }
 
-        dropZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            dropZone.classList.remove('drag-over');
-            handleFiles(e.dataTransfer.files);
-        });
+        function handleAuth() {
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value.trim();
 
-        fileInput.addEventListener('change', (e) => {
-            handleFiles(e.target.files);
-        });
+            if (!username || !password) {
+                showError('Please fill in all fields');
+                return;
+            }
 
-        // File Handling
+            if (password.length < 6) {
+                showError('Password must be at least 6 characters');
+                return;
+            }
+
+            if (isLoginMode) {
+                login(username, password);
+            } else {
+                register(username, password);
+            }
+        }
+
+        function register(username, password) {
+            // Check if user exists
+            const users = JSON.parse(localStorage.getItem('nightdrop_users') || '{}');
+
+            if (users[username]) {
+                showError('Username already exists');
+                return;
+            }
+
+            // Create new user (Note: In production, never store plain text passwords!)
+            users[username] = {
+                password: password, // Should be hashed in production
+                createdAt: Date.now()
+            };
+
+            localStorage.setItem('nightdrop_users', JSON.stringify(users));
+
+            // Auto login after registration
+            login(username, password);
+            showToast('Account created successfully!', 'success');
+        }
+
+        function login(username, password) {
+            const users = JSON.parse(localStorage.getItem('nightdrop_users') || '{}');
+
+            if (!users[username] || users[username].password !== password) {
+                showError('Invalid username or password');
+                return;
+            }
+
+            // Set session
+            currentUser = username;
+            sessionStorage.setItem('nightdrop_current_user', username);
+
+            // Load user files
+            loadUserFiles();
+
+            // Show main app
+            showMainApp();
+            showToast(`Welcome back, ${username}!`, 'success');
+        }
+
+        function checkExistingSession() {
+            const savedUser = sessionStorage.getItem('nightdrop_current_user');
+            if (savedUser) {
+                const users = JSON.parse(localStorage.getItem('nightdrop_users') || '{}');
+                if (users[savedUser]) {
+                    currentUser = savedUser;
+                    loadUserFiles();
+                    showMainApp();
+                }
+            }
+        }
+
+        function showMainApp() {
+            authScreen.style.display = 'none';
+            mainApp.style.display = 'block';
+            document.getElementById('currentUser').textContent = currentUser;
+            document.body.style.overflow = 'auto';
+
+            // Initialize file handlers
+            initFileHandlers();
+            updateStats();
+            renderFiles();
+        }
+
+        function logout() {
+            currentUser = null;
+            files = [];
+            sessionStorage.removeItem('nightdrop_current_user');
+
+            authScreen.style.display = 'flex';
+            mainApp.style.display = 'none';
+            document.body.style.overflow = 'hidden';
+
+            // Clear inputs
+            usernameInput.value = '';
+            passwordInput.value = '';
+            errorMsg.classList.remove('show');
+
+            showToast('Logged out successfully', 'info');
+        }
+
+        function loadUserFiles() {
+            const allFiles = JSON.parse(localStorage.getItem('nightdrop_files') || '[]');
+            files = allFiles.filter(f => f.user === currentUser);
+        }
+
+        function saveFiles() {
+            const allFiles = JSON.parse(localStorage.getItem('nightdrop_files') || '[]');
+            const otherFiles = allFiles.filter(f => f.user !== currentUser);
+            const storageData = files.map(f => ({
+                ...f,
+                content: f.content && f.content.length > 50000 ? null : f.content
+            }));
+            localStorage.setItem('nightdrop_files', JSON.stringify([...otherFiles, ...storageData]));
+        }
+
+        // File Handling Functions
+        function initFileHandlers() {
+            const dropZone = document.getElementById('dropZone');
+            const fileInput = document.getElementById('fileInput');
+
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.classList.add('drag-over');
+            });
+
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.classList.remove('drag-over');
+            });
+
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('drag-over');
+                handleFiles(e.dataTransfer.files);
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                handleFiles(e.target.files);
+            });
+        }
+
         function handleFiles(fileList) {
             Array.from(fileList).forEach(file => {
                 const fileData = {
@@ -628,19 +997,19 @@
                     size: file.size,
                     type: file.type,
                     lastModified: file.lastModified,
-                    content: null
+                    content: null,
+                    user: currentUser
                 };
 
-                // Read file content for preview/storage
                 const reader = new FileReader();
-                
+
                 if (file.type.startsWith('image/')) {
                     reader.onload = (e) => {
                         fileData.content = e.target.result;
                         addFile(fileData);
                     };
                     reader.readAsDataURL(file);
-                } else if (file.size < 1024 * 1024) { // Only store text files < 1MB
+                } else if (file.size < 1024 * 1024) {
                     reader.onload = (e) => {
                         fileData.content = e.target.result;
                         addFile(fileData);
@@ -668,16 +1037,9 @@
             showToast('File removed', 'warning');
         }
 
-        function saveFiles() {
-            // Store only metadata, not content for large files
-            const storageData = files.map(f => ({
-                ...f,
-                content: f.content && f.content.length > 50000 ? null : f.content
-            }));
-            localStorage.setItem('nightdrop_files', JSON.stringify(storageData));
-        }
-
         function renderFiles() {
+            const fileList = document.getElementById('fileList');
+
             if (files.length === 0) {
                 fileList.innerHTML = `
                     <div class="empty-state">
@@ -739,10 +1101,8 @@
 
         function updateStats() {
             document.getElementById('totalFiles').textContent = files.length;
-            
             const totalBytes = files.reduce((acc, file) => acc + file.size, 0);
             document.getElementById('totalSize').textContent = formatSize(totalBytes);
-            
             const types = new Set(files.map(f => f.type.split('/')[0]).filter(Boolean));
             document.getElementById('fileTypes').textContent = types.size;
         }
@@ -753,13 +1113,13 @@
 
             document.getElementById('modalTitle').textContent = file.name;
             const modalBody = document.getElementById('modalBody');
-            
+
             if (file.type.startsWith('image/')) {
                 modalBody.innerHTML = `<img src="${file.content}" class="preview-image" alt="${file.name}">`;
             } else {
                 modalBody.innerHTML = `<pre class="preview-text">${escapeHtml(file.content)}</pre>`;
             }
-            
+
             document.getElementById('previewModal').classList.add('active');
         }
 
@@ -771,40 +1131,39 @@
             const file = files.find(f => f.id === id);
             if (!file) return;
 
-            // Create download link
             const link = document.createElement('a');
             link.download = file.name;
-            
+
             if (file.content) {
                 link.href = file.content;
             } else {
-                // Create dummy content for demo
                 const blob = new Blob(['This is a demo file. In a real implementation, this would download the actual file content.'], { type: 'text/plain' });
                 link.href = URL.createObjectURL(blob);
             }
-            
+
             link.click();
             showToast(`Downloading ${file.name}`, 'success');
         }
 
         function showToast(message, type = 'info') {
+            const toastContainer = document.getElementById('toastContainer');
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
-            
+
             const icons = {
                 success: '✅',
                 error: '❌',
                 warning: '⚠️',
                 info: 'ℹ️'
             };
-            
+
             toast.innerHTML = `
                 <span>${icons[type] || 'ℹ️'}</span>
                 <span>${message}</span>
             `;
-            
+
             toastContainer.appendChild(toast);
-            
+
             setTimeout(() => {
                 toast.style.opacity = '0';
                 toast.style.transform = 'translateX(100%)';
@@ -826,9 +1185,12 @@
         // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') closeModal();
-            if (e.ctrlKey && e.key === 'o') {
+            if (e.ctrlKey && e.key === 'o' && mainApp.style.display === 'block') {
                 e.preventDefault();
-                fileInput.click();
+                document.getElementById('fileInput').click();
+            }
+            if (e.key === 'Enter' && authScreen.style.display !== 'none') {
+                handleAuth();
             }
         });
     </script>
